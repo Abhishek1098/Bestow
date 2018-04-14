@@ -12,28 +12,42 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
 
     private FrameLayout fragmentFrame;
+    private PlusFragment plusFragment;
+    private ProfileFragment profileFragment;
+    private BrowseFragment browseFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        fragmentFrame = findViewById(R.id.MainActivity_Fragment_frame);
+
+        plusFragment = new PlusFragment();
+        browseFragment = new BrowseFragment();
+        profileFragment = new ProfileFragment();
+
+        loadFragment(browseFragment);
         BottomNavigationView bottomNavigationView = findViewById(R.id.MainActivity_NavigationView_main);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Fragment frag = null;
+
                 switch (item.getItemId()){
                     case R.id.NavigationView_browse:
-                        return true;
+                        frag = browseFragment;
+                        break;
                     case R.id.NavigationView_plus:
-                        return true;
+                        frag = plusFragment;
+                        break;
                     case R.id.NavigationView_profile:
-                        return true;
+                        frag = profileFragment;
+                        break;
                 }
-                return false;
+                return loadFragment(frag);
             }
         });
-        fragmentFrame = findViewById(R.id.MainActivity_Fragment_frame);
     }
 
     private boolean loadFragment(Fragment fragment){
