@@ -18,8 +18,8 @@ import java.util.ArrayList;
 
 public class BrowseFragment extends Fragment {
 
-    ListView listView;
-    ArrayList<Item> items;
+    private ListView listView;
+    private ArrayList<Item> items;
 
     @Nullable
     @Override
