@@ -1,13 +1,17 @@
 package com.bestow.hackmhs.bestow;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
+
+    private FrameLayout fragmentFrame;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +34,14 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+        fragmentFrame = findViewById(R.id.MainActivity_fragment_frame);
     }
 
+    private boolean loadFragment(Fragment fragment){
+        if(fragment!=null){
+            getFragmentManager().beginTransaction().replace(R.id.MainActivity_fragment_frame, fragment).commit();
+            return true;
+        }
+        return false;
+    }
 }

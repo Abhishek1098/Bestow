@@ -7,14 +7,17 @@
     android:layout_height="match_parent"
     tools:context="com.bestow.hackmhs.bestow.MainActivity">
 
-    <android.support.design.widget.BottomNavigationView
-        android:id="@+id/MainActivity_NavigationView_main"
+    <FrameLayout
+        android:id="@+id/MainActivity_fragment_frame"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="?android:attr/windowBackground"
+        android:layout_height="0dp"
+        android:layout_marginBottom="56dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/navigation" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </FrameLayout>
+
 
 </android.support.constraint.ConstraintLayout>
