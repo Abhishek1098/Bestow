@@ -18,8 +18,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        BottomNavigationView navigation = findViewById(R.id.MainActivity_NavigationView_main);
-        navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.MainActivity_NavigationView_main);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
@@ -29,17 +29,16 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     case R.id.NavigationView_profile:
                         return true;
-                        //
                 }
                 return false;
             }
         });
-        fragmentFrame = findViewById(R.id.MainActivity_fragment_frame);
+        fragmentFrame = findViewById(R.id.MainActivity_Fragment_frame);
     }
 
     private boolean loadFragment(Fragment fragment){
         if(fragment!=null){
-            getFragmentManager().beginTransaction().replace(R.id.MainActivity_fragment_frame, fragment).commit();
+            getFragmentManager().beginTransaction().replace(R.id.MainActivity_Fragment_frame, fragment).commit();
             return true;
         }
         return false;
