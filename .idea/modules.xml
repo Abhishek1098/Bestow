@@ -3,7 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Bestow.iml" filepath="$PROJECT_DIR$/Bestow.iml" />
+      <module fileurl="file://C:\Users\Shiven Kumar\Documents\Android Studio Projects\Bestow\Bestow.iml" filepath="C:\Users\Shiven Kumar\Documents\Android Studio Projects\Bestow\Bestow.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://C:\Users\Shiven Kumar\Documents\Android Studio Projects\Bestow\app\app.iml" filepath="C:\Users\Shiven Kumar\Documents\Android Studio Projects\Bestow\app\app.iml" />
     </modules>
   </component>
 </project>
