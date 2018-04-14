@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     case R.id.NavigationView_profile:
                         return true;
+                        //
                 }
                 return false;
             }
