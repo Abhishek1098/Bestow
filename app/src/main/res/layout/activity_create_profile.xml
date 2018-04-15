@@ -28,7 +28,7 @@
         android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:hint="Name"
+        android:hint="What is your name?"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -46,7 +46,7 @@
         app:layout_constraintEnd_toEndOf="@+id/CreateProfileActivity_EditText_name"
         app:layout_constraintStart_toStartOf="@+id/CreateProfileActivity_EditText_name"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_default" />
+        app:srcCompat="@drawable/camera" />
 
     <Button
         android:id="@+id/CreateProfileActivity_Button_save"

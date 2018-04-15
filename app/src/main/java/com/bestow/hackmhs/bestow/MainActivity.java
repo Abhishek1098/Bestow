@@ -70,6 +70,15 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (firebaseAuth.getCurrentUser() == null) {
+            finish();
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+        }
+    }
+
     public static PlusFragment getPlusFragment() {
         return plusFragment;
     }

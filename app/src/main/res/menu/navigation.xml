@@ -9,7 +9,7 @@
     <item
         android:id="@+id/NavigationView_plus"
         android:icon="@drawable/ic_plus"
-        android:title="Plus" />
+        android:title="Create" />
 
     <item
         android:id="@+id/NavigationView_profile"

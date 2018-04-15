@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -48,6 +49,14 @@ public class ProfileFragment extends Fragment {
 
         setView();
 
+        (view.findViewById(R.id.ProfileFragment_Button_signOut)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(getActivity(), LoginActivity.class));
+            }
+        });
+
         Bitmap tester = BitmapFactory.decodeResource(getResources(),R.drawable.ic_browse);
         items = new ArrayList<>();
             items.add(new Item("test","blue t shirt", "nyc", tester));
@@ -58,23 +67,18 @@ public class ProfileFragment extends Fragment {
     }
 
     public void setView(){
-        firebaseAuth =FirebaseAuth.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
-        if(firebaseUser.getDisplayName() != null){
-            textViewName.setText(firebaseUser.getDisplayName().toString());
-        }
-
-        if(firebaseUser.getPhotoUrl() != null){
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), firebaseUser.getPhotoUrl());
-                imageViewProfilePicture.setImageBitmap(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
+        if(firebaseUser != null){
+            if(firebaseUser.getPhotoUrl() != null){
+                Glide.with(this).load(firebaseUser.getPhotoUrl().toString()).into(imageViewProfilePicture);
+            }else{
+                imageViewProfilePicture.setImageResource(R.drawable.ic_default);
             }
-        }else{
-            imageViewProfilePicture.setImageResource(R.drawable.ic_default);
+            if(firebaseUser.getDisplayName() != null){
+                textViewName.setText(firebaseUser.getDisplayName());
+            }
         }
-
     }
 }
