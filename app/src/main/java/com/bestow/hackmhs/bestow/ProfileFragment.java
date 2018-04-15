@@ -60,9 +60,9 @@ public class ProfileFragment extends Fragment {
         });
 
         /*Bitmap tester = BitmapFactory.decodeResource(getResources(),R.drawable.ic_browse);
-        items = new ArrayList<>();
-            items.add(new Item("test","blue t shirt", "nyc", tester));
-        ItemAdapter adapter  = new ItemAdapter(getActivity(),R.layout.item_layout,items);
+        itemArrayList = new ArrayList<>();
+            itemArrayList.add(new Item("test","blue t shirt", "nyc", tester));
+        ItemAdapter adapter  = new ItemAdapter(getActivity(),R.layout.item_layout,itemArrayList);
         listView.setAdapter(adapter);*/
 
         return view;

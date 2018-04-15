@@ -133,7 +133,7 @@ public class PlusFragment extends Fragment implements LocationListener{
         Item itemUpload = new Item (item.getUsername(), item.getDescription(), item.getCity(), "");
 
         FirebaseDatabase firebaseDatabase =  FirebaseDatabase.getInstance();
-        DatabaseReference drItems = firebaseDatabase.getReference("items");
+        DatabaseReference drItems = firebaseDatabase.getReference("itemArrayList");
         drItems.child(drItems.push().getKey()).setValue("Hello-world");
     }
 
