@@ -37,8 +37,8 @@
 
     <ImageView
         android:id="@+id/ProfileFragment_ImageView_logout"
-        android:layout_width="125"
-        android:layout_height="125"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -47,8 +47,8 @@
 
     <ImageView
         android:id="@+id/ProfileFragment_ImageView_edit"
-        android:layout_width="125"
-        android:layout_height="125"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
         android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
