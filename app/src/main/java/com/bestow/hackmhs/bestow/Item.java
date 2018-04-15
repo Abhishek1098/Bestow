@@ -8,41 +8,35 @@ import android.graphics.Bitmap;
 
 public class Item {
 
-    private String username;
-    private String description;
-    private Bitmap image;
-    private String town;
+    private String username, description, city, bitmapString;
+    private Bitmap bitmap;
 
-    public Item(String user, String desc, String city, Bitmap img){
-        username=user;
-        description=desc;
-        town = city;
-        image=img;
+
+    public Item(String username, String description, String city, Bitmap bitmap){
+        this.username=username;
+        this.description=description;
+        this.city = city;
+        this.bitmap=bitmap;
+    }
+
+    public Item(String username, String description, String city, String bitmapString){
+        this.username=username;
+        this.description=description;
+        this.city = city;
+        this.bitmapString = bitmapString;
     }
 
 
     public String getUsername() {
         return username;
     }
-    public Bitmap getImage() {
-        return image;
+    public Bitmap getBitmap() {
+        return bitmap;
     }
     public String getDescription() {
         return description;
     }
-    public String getTown() {
-        return town;
-    }
-    public void setTown(String town) {
-        this.town = town;
-    }
-    public void setUsername(String username) {
-        this.username = username;
-    }
-    public void setDescription(String description) {
-        this.description = description;
-    }
-    public void setImage(Bitmap image) {
-        this.image = image;
+    public String getCity() {
+        return city;
     }
 }

@@ -72,7 +72,6 @@ public class ProfileFragment extends Fragment {
     }
 
     public void setView(){
-
         Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "schoolbell.ttf");
 
         firebaseAuth = FirebaseAuth.getInstance();
