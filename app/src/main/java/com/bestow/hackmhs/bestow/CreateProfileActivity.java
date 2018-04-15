@@ -7,6 +7,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,16 +28,16 @@ import java.io.IOException;
 
 public class CreateProfileActivity extends AppCompatActivity {
 
-    ImageView imageViewProfile;
-    TextView textViewName;
+    private static final int SELECT_IMAGE_KEY = 101;
 
-    FirebaseAuth firebaseAuth;
+    private ImageView imageViewPreview;
+    private EditText editTextName;
 
-    static final int IMAGE_KEY_CODE = 00;
+    private Uri uriProfileImage;
 
-    String imageDownloadUrl;
+    private String profileImageUrl;
 
-    private Uri uriImage;
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -45,75 +46,91 @@ public class CreateProfileActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
 
-        imageViewProfile = findViewById(R.id.CreateProfileActivity_ImageView);
-        imageViewProfile.setOnClickListener(new View.OnClickListener() {
+        imageViewPreview = findViewById(R.id.CreateProfileActivity_ImageView);
+        imageViewPreview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Profile Picture"), IMAGE_KEY_CODE);
+                setImageSelector();
             }
         });
 
-        final EditText editTextName = findViewById(R.id.CreateProfileActivity_EditText_name);
+
+        editTextName = findViewById(R.id.CreateProfileActivity_EditText_name);
         (findViewById(R.id.CreateProfileActivity_Button_save)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveUserInformation(editTextName.getText().toString().trim(), uriImage);
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                saveUserInformation();
+                finish();
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
             }
         });
+
+    }
+
+    private void saveUserInformation(){
+        String displayName = editTextName.getText().toString();
+
+        if (displayName.isEmpty()) {
+            Toast.makeText(getApplicationContext(), "FILL NAME!", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        if (firebaseUser != null && profileImageUrl != null) {
+            UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder().setDisplayName(displayName).setPhotoUri(Uri.parse(profileImageUrl)).build();
+            firebaseUser.updateProfile(userProfileChangeRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(CreateProfileActivity.this, "Profile Updated", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }else if(firebaseUser != null){
+            UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder().setDisplayName(displayName).build();
+            firebaseUser.updateProfile(userProfileChangeRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(CreateProfileActivity.this, "Profile Updated", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+    }
+
+    private void setImageSelector(){
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Profile Image"), SELECT_IMAGE_KEY);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == IMAGE_KEY_CODE && resultCode == RESULT_OK){
-            if(data != null && data.getData() != null){
-                uriImage = data.getData();
-                try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uriImage);
-                    imageViewProfile.setImageBitmap(bitmap);
-                    uploadUserPhoto(uriImage);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        if (requestCode == SELECT_IMAGE_KEY && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            uriProfileImage = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uriProfileImage);
+                imageViewPreview.setImageBitmap(bitmap);
+                createProfileImageUrl();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
 
-    private void uploadUserPhoto(Uri uriImage){
-        StorageReference profileImageReference = FirebaseStorage.getInstance().getReference("profilepics/"+System.currentTimeMillis()+".jpg");
-        profileImageReference.putFile(uriImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                imageDownloadUrl = taskSnapshot.getDownloadUrl().toString();
-            }
-        });
-    }
+    private void createProfileImageUrl(){
+        StorageReference profileImageRef = FirebaseStorage.getInstance().getReference("profilepics/" + System.currentTimeMillis() + ".jpg");
 
-    private void saveUserInformation(String name, Uri photoUri){
-        if(name.isEmpty()){
-            Toast.makeText(getApplicationContext(), "FILL NAME", Toast.LENGTH_LONG);
-            return;
-        }
-
-        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-        if(firebaseUser != null){
-            UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder().setDisplayName(name).setPhotoUri(photoUri).build();
-            firebaseUser.updateProfile(userProfileChangeRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if(task.isSuccessful()){
-                        Toast.makeText(CreateProfileActivity.this, "Profile Updated!", Toast.LENGTH_LONG);
-                    }
+        if (uriProfileImage != null) {
+            profileImageRef.putFile(uriProfileImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    profileImageUrl = taskSnapshot.getDownloadUrl().toString();
                 }
             });
         }
-
     }
 }

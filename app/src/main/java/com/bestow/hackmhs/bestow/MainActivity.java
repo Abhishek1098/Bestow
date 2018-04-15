@@ -3,6 +3,7 @@ package com.bestow.hackmhs.bestow;
 import android.Manifest;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -15,17 +16,22 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class MainActivity extends AppCompatActivity {
 
     private FrameLayout fragmentFrame;
     private PlusFragment plusFragment;
     private ProfileFragment profileFragment;
     private BrowseFragment browseFragment;
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        firebaseAuth = FirebaseAuth.getInstance();
 
         fragmentFrame = findViewById(R.id.MainActivity_Fragment_frame);
 

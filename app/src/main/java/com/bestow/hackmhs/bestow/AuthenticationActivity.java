@@ -41,6 +41,7 @@ public class AuthenticationActivity extends AppCompatActivity {
         (findViewById(R.id.AuthenticationActivity_TextView_login)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                finish();
                 startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             }
         });
@@ -64,6 +65,7 @@ public class AuthenticationActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
                     Toast.makeText(getApplicationContext(), "USER CREATED", Toast.LENGTH_LONG).show();
+                    finish();
                     Intent intent = new Intent(getApplicationContext(), CreateProfileActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
