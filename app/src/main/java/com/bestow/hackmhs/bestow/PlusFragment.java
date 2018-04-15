@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -16,6 +17,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 
 public class PlusFragment extends Fragment implements LocationListener{
 
@@ -23,15 +34,13 @@ public class PlusFragment extends Fragment implements LocationListener{
     static final int REQUEST_LOCATION = 1;
     double latitude = 0;
     double longitude = 0;
-    TextView latText;
-    TextView longText;
+
+    JSONObject GPSjsonObject;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_plus,null);
-        latText = view.findViewById(R.id.PlusFragment_TextView_latText);
-        longText = view.findViewById(R.id.PlusFragment_TextView_longText);
 
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         getLocation();
@@ -50,10 +59,14 @@ public class PlusFragment extends Fragment implements LocationListener{
         else {
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 0, this);
-            latitude = location.getLatitude();
-            longitude = location.getLatitude();
-            latText.setText(latitude+"");
-            longText.setText(longitude+"");
+            if (location != null) {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+            }else{
+                Toast.makeText(getActivity(),"Unable to aquire location. Try again in a minute",Toast.LENGTH_LONG);
+            }
+            GPSAsyncThread GPSThread = new GPSAsyncThread();
+            GPSThread.execute();
         }
 
     }
@@ -68,7 +81,6 @@ public class PlusFragment extends Fragment implements LocationListener{
                 break;
         }
     }
-
 
     @Override
     public void onLocationChanged(Location location) {
@@ -89,5 +101,46 @@ public class PlusFragment extends Fragment implements LocationListener{
     public void onProviderDisabled(String s) {
 
     }
+
+    public class GPSAsyncThread extends AsyncTask<Void, Void, Void>{
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                URL url = new URL("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latitude + "," + longitude + "&key=AIzaSyDxkprNaAGCP6GZ-HIJIIYTyZzVNWeBm2w");
+                URLConnection urlConnection = url.openConnection();
+                InputStream inputStream = urlConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String input = bufferedReader.readLine();
+                String line = "";
+
+                while (line != null){
+                    line = bufferedReader.readLine();
+                    input += line;
+                }
+
+                GPSjsonObject = new JSONObject(input);
+                Log.d("qwer",GPSjsonObject.toString());
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            try {
+                String town = GPSjsonObject.getJSONArray("results").getJSONObject(1).getString("formatted_address");
+                // town is the address that you have to send to firebase
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
 }
 
