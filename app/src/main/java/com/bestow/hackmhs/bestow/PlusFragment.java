@@ -20,14 +20,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -39,6 +45,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -52,6 +59,8 @@ import clarifai2.dto.input.ClarifaiInput;
 import clarifai2.dto.model.output.ClarifaiOutput;
 import clarifai2.dto.prediction.Concept;
 
+import static android.app.Activity.RESULT_OK;
+
 public class PlusFragment extends Fragment implements LocationListener{
 
     LocationManager locationManager;
@@ -61,12 +70,15 @@ public class PlusFragment extends Fragment implements LocationListener{
     double longitude = 0;
     String town="";
     JSONObject GPSjsonObject;
+    private ArrayList<String> options;
 
     EditText editDescription;
     ImageView pictureTaken;
     Button takePic, post;
-    private static final int CAMERA_REQUEST_CODE = 10;
+    Spinner optionSpinner;
+    private static final int SELECT_IMAGE_KEY = 10;
     String stringUrl;
+    Uri uriProfileImage;
 
     @Nullable
     @Override
@@ -80,15 +92,30 @@ public class PlusFragment extends Fragment implements LocationListener{
         takePic = view.findViewById(R.id.PlusFragment_Button_TakePic);
         post = view.findViewById(R.id.PlusFragment_Button_PostButton);
         editDescription = view.findViewById(R.id.PlusFragment_EditText_EditDesc);
+        optionSpinner = view.findViewById(R.id.PlusFragment_Spinner_Options);
             post.setVisibility(View.INVISIBLE);
             editDescription.setVisibility(View.INVISIBLE);
+            optionSpinner.setVisibility(View.INVISIBLE);
 
         takePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                captureImg();
+                //captureImg();
+                setImageSelector();
                 post.setVisibility(View.VISIBLE);
                 editDescription.setVisibility(View.VISIBLE);
+                new ClarifaiThread().execute();
+            }
+        });
+        optionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                editDescription.setText(options.get(i));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
             }
         });
         post.setOnClickListener(new View.OnClickListener() {
@@ -108,6 +135,13 @@ public class PlusFragment extends Fragment implements LocationListener{
         return view;
     }
 
+    private void setImageSelector() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Profile Image"), SELECT_IMAGE_KEY);
+    }
+
     public void storeItemFirebase(){
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
@@ -123,20 +157,20 @@ public class PlusFragment extends Fragment implements LocationListener{
         drItems.child(drItems.push().getKey()).setValue("Hello-world");
     }
 
-    public void captureImg(){
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, CAMERA_REQUEST_CODE);
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        bitmap = (Bitmap)data.getExtras().get("data");
-        pictureTaken.setImageBitmap(bitmap);
-        Uri uri = getImageUri(getContext(), bitmap);
-        createProfileImageUrl(uri);
-        //After this line the stringURl is an actual value!!!!!!!!!!! SHIVEN HERE
-        //stringURL <--- do shit with that
+
+        if (requestCode == SELECT_IMAGE_KEY && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            uriProfileImage = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uriProfileImage);
+                pictureTaken.setImageBitmap(bitmap);
+                createProfileImageUrl();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public Uri getImageUri(Context inContext, Bitmap inImage) {
@@ -146,9 +180,8 @@ public class PlusFragment extends Fragment implements LocationListener{
         return Uri.parse(path);
     }
 
-    private void createProfileImageUrl(Uri uriProfileImage){
-        StorageReference profileImageRef = FirebaseStorage.getInstance().getReference("profilepics/" + System.currentTimeMillis() + ".jpg");
-
+    private void createProfileImageUrl(){
+        StorageReference profileImageRef = FirebaseStorage.getInstance().getReference("shiven/" + System.currentTimeMillis() + ".jpg");
         if (uriProfileImage != null) {
             profileImageRef.putFile(uriProfileImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -185,9 +218,6 @@ public class PlusFragment extends Fragment implements LocationListener{
         switch (requestCode){
             case REQUEST_LOCATION:
                 getLocation();
-                break;
-            case CAMERA_REQUEST_CODE:
-                captureImg();
                 break;
         }
     }
@@ -269,13 +299,21 @@ public class PlusFragment extends Fragment implements LocationListener{
             String result = predictionResults.toString();
             result = result.substring(result.indexOf("data=["),result.indexOf("}],"));
             Log.d("debugging",result);
-            ArrayList<String> options = new ArrayList<>();
+            options = new ArrayList<>();
             for(int i=0; i<5; i++){
                 result=result.substring(result.indexOf("name=")+5);
                 options.add(result.substring(0,result.indexOf(",")));
             }
             Log.d("debugging",options.toString());
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            ArrayAdapter arrayAdapter = new ArrayAdapter(getActivity(),R.layout.support_simple_spinner_dropdown_item,options);
+            optionSpinner.setAdapter(arrayAdapter);
+            optionSpinner.setVisibility(View.VISIBLE);
+            super.onPostExecute(aVoid);
         }
     }
 
