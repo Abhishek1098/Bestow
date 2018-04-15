@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.content.Context;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -97,9 +98,20 @@ public class PlusFragment extends Fragment implements LocationListener{
                 if(editDescription.getText().toString().length()==0){
                     Toast.makeText(getActivity(), "Please Enter a Description", Toast.LENGTH_SHORT).show();
                 }else{
+
+                    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+                    FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
                     FirebaseDatabase firebaseDatabase =  FirebaseDatabase.getInstance();
-                    DatabaseReference drItems = firebaseDatabase.getReference("items");
-                    drItems.child(drItems.push().getKey()).setValue("Shivens sister has a fat ass");
+                    DatabaseReference drItems = firebaseDatabase.getReference("users");
+
+
+                    String name = firebaseUser.getDisplayName();
+                    String description = editDescription.getText().toString();
+
+                    Item itemToAdd = new Item(name, description, town, "hope this works");
+                    drItems.child(name).child(drItems.push().getKey()).setValue(itemToAdd);
+
                     Toast.makeText(getActivity(), "Item Added", Toast.LENGTH_SHORT).show();
                 }
             }
