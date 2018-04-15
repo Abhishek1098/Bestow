@@ -81,7 +81,7 @@ public class PlusFragment extends Fragment implements LocationListener{
                 if(editDescription.getText().toString().length()==0){
                     Toast.makeText(getActivity(), "Please Enter a Description", Toast.LENGTH_SHORT).show();
                 }else{
-                    BrowseFragment.items.add(new Item("NAME",editDescription.getText().toString(),town,bitmap));
+                    BrowseFragment.items.add(new Item("NAME",editDescription.getText().toString(),town,bitmap)); //TODO: FIX NAME AND PULL IT FROM FIREBASE
                 }
             }
         });
