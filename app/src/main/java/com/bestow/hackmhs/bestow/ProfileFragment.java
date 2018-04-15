@@ -88,7 +88,7 @@ public class ProfileFragment extends Fragment {
                     String description  = (String) messageSnapshot.child("description").getValue();
                     String city = (String) messageSnapshot.child("city").getValue();
 
-                    itemArrayList.add(new Item(username, description, city, ""));
+                    items.add(new Item(username, description, city, ""));
 
                     adapter.notifyDataSetChanged();
                 }
