@@ -38,9 +38,6 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_profile,null);
 
-        ConstraintLayout constraintLayout =view.findViewById(R.id.ProfileFragment_layout);
-        constraintLayout.setBackgroundColor(getActivity().getResources().getColor(R.color.grey));
-
         imageViewProfilePicture = view.findViewById(R.id.ProfileFragment_ImageView_ProfilePic);
         textViewName = view.findViewById(R.id.ProfileFragment_TextView_Name);
         //listView = view.findViewById(R.id.ProfileFragment_ListView_ItemList);

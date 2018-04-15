@@ -37,6 +37,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
+
+import clarifai2.api.ClarifaiBuilder;
+import clarifai2.api.ClarifaiClient;
+import clarifai2.dto.input.ClarifaiInput;
+import clarifai2.dto.model.output.ClarifaiOutput;
+import clarifai2.dto.prediction.Concept;
 
 public class PlusFragment extends Fragment implements LocationListener{
 
@@ -210,6 +218,34 @@ public class PlusFragment extends Fragment implements LocationListener{
                 e.printStackTrace();
             }
 
+        }
+    }
+
+    public class ClarifaiThread extends AsyncTask<Void, Void, Void>{
+        @Override
+        protected Void doInBackground(Void... voids) {
+            ClarifaiClient client = new ClarifaiBuilder("e1689dff436e4335b7f3e799ba4c2fc2").buildSync();
+            final List<ClarifaiOutput<Concept>> predictionResults =
+                    client.getDefaultModels().generalModel().predict()
+                            .withInputs(ClarifaiInput.forImage("https://img.michaels.com/L6/3/IOGLO/873402639/212485006/10186027_r.jpg?fit=inside|1024:1024"))
+                            .executeSync().get();
+
+            /*final List<ClarifaiOutput<Concept>> predictionResults =
+                    client.getDefaultModels().generalModel().predict()
+                    .withInputs(ClarifaiInput.forImage(new File("/home/user/image.jpeg")))
+                    .executeSync();*/
+
+            Log.d("debugging",predictionResults.get(0).toString());
+            String result = predictionResults.toString();
+            result = result.substring(result.indexOf("data=["),result.indexOf("}],"));
+            Log.d("debugging",result);
+            ArrayList<String> options = new ArrayList<>();
+            for(int i=0; i<5; i++){
+                result=result.substring(result.indexOf("name=")+5);
+                options.add(result.substring(0,result.indexOf(",")));
+            }
+            Log.d("debugging",options.toString());
+            return null;
         }
     }
 
