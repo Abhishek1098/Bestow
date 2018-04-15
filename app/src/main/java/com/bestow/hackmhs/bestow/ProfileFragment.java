@@ -3,6 +3,7 @@ package com.bestow.hackmhs.bestow;
 import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -12,17 +13,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class ProfileFragment extends Fragment {
 
     private ImageView imageViewProfilePicture;
     private TextView textViewName;
+    private ListView listView;
+    private ArrayList<Item> items;
     private FirebaseAuth firebaseAuth;
 
     @Nullable
@@ -32,6 +37,7 @@ public class ProfileFragment extends Fragment {
 
         imageViewProfilePicture = view.findViewById(R.id.ProfileFragment_ImageView_ProfilePic);
         textViewName = view.findViewById(R.id.ProfileFragment_TextView_Name);
+        listView = view.findViewById(R.id.ProfileFragment_ListView_ItemList);
 
         (view.findViewById(R.id.ProfileFragment_Button_EditProfile)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,6 +47,12 @@ public class ProfileFragment extends Fragment {
         });
 
         setView();
+
+        Bitmap tester = BitmapFactory.decodeResource(getResources(),R.drawable.ic_browse);
+        items = new ArrayList<>();
+            items.add(new Item("test","blue t shirt", "nyc", tester));
+        ItemAdapter adapter  = new ItemAdapter(getActivity(),R.layout.item_layout,items);
+        listView.setAdapter(adapter);
 
         return view;
     }
