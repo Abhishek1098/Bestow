@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class BrowseFragment extends Fragment {
 
     private ListView listView;
-    private ArrayList<Item> items;
+    public static ArrayList<Item> items;
 
     @Nullable
     @Override

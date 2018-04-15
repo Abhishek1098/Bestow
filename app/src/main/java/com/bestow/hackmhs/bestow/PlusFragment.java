@@ -41,13 +41,15 @@ public class PlusFragment extends Fragment implements LocationListener{
 
     LocationManager locationManager;
     static final int REQUEST_LOCATION = 1;
+    Bitmap bitmap;
     double latitude = 0;
     double longitude = 0;
+    String town="";
     JSONObject GPSjsonObject;
-    EditText editDescription;
 
+    EditText editDescription;
     ImageView pictureTaken;
-    Button takePic;
+    Button takePic, post;
     private static final int CAMERA_REQUEST_CODE = 10;
 
     @Nullable
@@ -60,11 +62,27 @@ public class PlusFragment extends Fragment implements LocationListener{
 
         pictureTaken = view.findViewById(R.id.PlusFragment_ImageView_PictureTaken);
         takePic = view.findViewById(R.id.PlusFragment_Button_TakePic);
+        post = view.findViewById(R.id.PlusFragment_Button_PostButton);
+        editDescription = view.findViewById(R.id.PlusFragment_EditText_EditDesc);
+            post.setVisibility(View.INVISIBLE);
+            editDescription.setVisibility(View.INVISIBLE);
 
         takePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 captureImg();
+                post.setVisibility(View.VISIBLE);
+                editDescription.setVisibility(View.VISIBLE);
+            }
+        });
+        post.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(editDescription.getText().toString().length()==0){
+                    Toast.makeText(getActivity(), "Please Enter a Description", Toast.LENGTH_SHORT).show();
+                }else{
+                    BrowseFragment.items.add(new Item("NAME",editDescription.getText().toString(),town,bitmap));
+                }
             }
         });
 
@@ -79,7 +97,7 @@ public class PlusFragment extends Fragment implements LocationListener{
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Bitmap bitmap = (Bitmap)data.getExtras().get("data");
+        bitmap = (Bitmap)data.getExtras().get("data");
         pictureTaken.setImageBitmap(bitmap);
     }
 
@@ -166,7 +184,7 @@ public class PlusFragment extends Fragment implements LocationListener{
             super.onPostExecute(aVoid);
 
             try {
-                String town = GPSjsonObject.getJSONArray("results").getJSONObject(1).getString("formatted_address");
+                town = GPSjsonObject.getJSONArray("results").getJSONObject(1).getString("formatted_address");
 
                 // town is the address that you have to send to firebase
             } catch (JSONException e) {
