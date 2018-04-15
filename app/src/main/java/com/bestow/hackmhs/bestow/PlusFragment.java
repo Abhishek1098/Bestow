@@ -19,6 +19,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -50,10 +53,7 @@ public class PlusFragment extends Fragment implements LocationListener{
 
     private void getLocation() {
 
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) !=
-                PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.ACCESS_FINE_LOCATION},REQUEST_LOCATION);
         }
         else {
@@ -63,7 +63,7 @@ public class PlusFragment extends Fragment implements LocationListener{
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
             }else{
-                Toast.makeText(getActivity(),"Unable to aquire location. Try again in a minute",Toast.LENGTH_LONG);
+                Toast.makeText(getActivity(),"Unable to aquire location. Try again in a minute",Toast.LENGTH_LONG).show();
             }
             GPSAsyncThread GPSThread = new GPSAsyncThread();
             GPSThread.execute();
@@ -120,8 +120,6 @@ public class PlusFragment extends Fragment implements LocationListener{
                 }
 
                 GPSjsonObject = new JSONObject(input);
-                Log.d("qwer",GPSjsonObject.toString());
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -134,6 +132,7 @@ public class PlusFragment extends Fragment implements LocationListener{
 
             try {
                 String town = GPSjsonObject.getJSONArray("results").getJSONObject(1).getString("formatted_address");
+
                 // town is the address that you have to send to firebase
             } catch (JSONException e) {
                 e.printStackTrace();

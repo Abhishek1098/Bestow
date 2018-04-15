@@ -42,7 +42,7 @@ public class AuthenticationActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finish();
-                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                startActivity(new Intent(getApplicationContext(), LoginActivity.class));//
             }
         });
     }
