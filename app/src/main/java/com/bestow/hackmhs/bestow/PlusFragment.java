@@ -82,9 +82,9 @@ public class PlusFragment extends Fragment implements LocationListener{
                 if(editDescription.getText().toString().length()==0){
                     Toast.makeText(getActivity(), "Please Enter a Description", Toast.LENGTH_SHORT).show();
                 }else{
-
-                    storeItemFirebase();
-
+                    FirebaseDatabase firebaseDatabase =  FirebaseDatabase.getInstance();
+                    DatabaseReference drItems = firebaseDatabase.getReference("items");
+                    drItems.child(drItems.push().getKey()).setValue("Shivens sister has a fat ass");
                     Toast.makeText(getActivity(), "Item Added", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -101,11 +101,11 @@ public class PlusFragment extends Fragment implements LocationListener{
         String description = editDescription.getText().toString();
 
         Item item = new Item( name, description, town, bitmap);
-        Item itemUpload = new Item (item.getUsername(), item.getDescription(), item.getCity(), item.BitMapToString(item.getBitmap()));
+        Item itemUpload = new Item (item.getUsername(), item.getDescription(), item.getCity(), "");
 
         FirebaseDatabase firebaseDatabase =  FirebaseDatabase.getInstance();
         DatabaseReference drItems = firebaseDatabase.getReference("items");
-        drItems.child(drItems.push().getKey()).setValue(itemUpload);
+        drItems.child(drItems.push().getKey()).setValue("Hello-world");
     }
 
     public void captureImg(){

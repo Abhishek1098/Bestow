@@ -14,6 +14,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="Already have an account? Log in."
+        android:textColor="@color/blue"
         app:layout_constraintEnd_toEndOf="@+id/AuthenticationActivity_LinearLayout"
         app:layout_constraintStart_toStartOf="@+id/AuthenticationActivity_LinearLayout"
         app:layout_constraintTop_toBottomOf="@+id/AuthenticationActivity_LinearLayout" />
@@ -29,8 +30,10 @@
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.601">
 
         <EditText
             android:id="@+id/AuthenticationActivity_EditText_username"
@@ -38,7 +41,13 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Username"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:textColor="@color/blue"
+            android:textColorHighlight="@color/blue"
+            android:textColorHint="@color/blue"
+            android:shadowColor="@color/blue"
+            android:textColorLink="@color/blue"
+            android:backgroundTint="@color/blue"/>
 
         <EditText
             android:id="@+id/AuthenticationActivity_EditText_password"
@@ -46,14 +55,36 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Password"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:textColor="@color/blue"
+            android:textColorHighlight="@color/blue"
+            android:textColorHint="@color/blue"
+            android:shadowColor="@color/blue"
+            android:textColorLink="@color/blue"
+            android:backgroundTint="@color/blue"/>
 
         <Button
             android:id="@+id/AuthenticationActivity_Button_createAccount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Create Account!" />
+            android:text="Create Account!"
+            android:textColor="@color/blue" />
 
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="209dp"
+        android:layout_height="177dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/AuthenticationActivity_LinearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.952"
+        app:srcCompat="@drawable/people" />
 
 </android.support.constraint.ConstraintLayout>
