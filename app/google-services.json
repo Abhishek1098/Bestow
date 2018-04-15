@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1022356300878",
+    "firebase_url": "https://bestow-a19ad.firebaseio.com",
+    "project_id": "bestow-a19ad",
+    "storage_bucket": "bestow-a19ad.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1022356300878:android:413a7a6778ddc404",
+        "android_client_info": {
+          "package_name": "com.bestow.hackmhs.bestow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1022356300878-6namfl3qnhkdkp00blot2o1ae9pj4i1v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bestow.hackmhs.bestow",
+            "certificate_hash": "86a219feaade8058bc69862cb12ab2432f1bcee7"
+          }
+        },
+        {
+          "client_id": "1022356300878-jjp81u80g60eiqdt50ksl0gpcjdfqufs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqN3s2A5vofsw6yVIxn9evIPEL2dvi5YA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1022356300878-jjp81u80g60eiqdt50ksl0gpcjdfqufs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
