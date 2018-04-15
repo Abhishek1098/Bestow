@@ -21,9 +21,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -62,10 +65,12 @@ public class PlusFragment extends Fragment implements LocationListener{
     double longitude = 0;
     String town="";
     JSONObject GPSjsonObject;
+    private ArrayList<String> options = new ArrayList<>();
 
     EditText editDescription;
     ImageView pictureTaken;
     Button takePic, post;
+    Spinner optionSpinner;
     private static final int CAMERA_REQUEST_CODE = 10;
     String stringUrl;
 
@@ -80,9 +85,11 @@ public class PlusFragment extends Fragment implements LocationListener{
         pictureTaken = view.findViewById(R.id.PlusFragment_ImageView_PictureTaken);
         takePic = view.findViewById(R.id.PlusFragment_Button_TakePic);
         post = view.findViewById(R.id.PlusFragment_Button_PostButton);
+        optionSpinner = view.findViewById(R.id.PlusFragment_Spinner_OptionSpinner);
         editDescription = view.findViewById(R.id.PlusFragment_EditText_EditDesc);
-            post.setVisibility(View.INVISIBLE);
-            editDescription.setVisibility(View.INVISIBLE);
+        post.setVisibility(View.INVISIBLE);
+        editDescription.setVisibility(View.INVISIBLE);
+        optionSpinner.setVisibility(View.INVISIBLE);
 
         takePic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,6 +97,18 @@ public class PlusFragment extends Fragment implements LocationListener{
                 captureImg();
                 post.setVisibility(View.VISIBLE);
                 editDescription.setVisibility(View.VISIBLE);
+                new ClarifaiThread().execute();
+            }
+        });
+        optionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                editDescription.setText(options.get(i));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
             }
         });
         post.setOnClickListener(new View.OnClickListener() {
@@ -283,13 +302,21 @@ public class PlusFragment extends Fragment implements LocationListener{
             String result = predictionResults.toString();
             result = result.substring(result.indexOf("data=["),result.indexOf("}],"));
             Log.d("debugging",result);
-            ArrayList<String> options = new ArrayList<>();
+            options = new ArrayList<>();
             for(int i=0; i<5; i++){
                 result=result.substring(result.indexOf("name=")+5);
                 options.add(result.substring(0,result.indexOf(",")));
             }
             Log.d("debugging",options.toString());
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            ArrayAdapter arrayAdapter = new ArrayAdapter(getActivity(),R.layout.support_simple_spinner_dropdown_item,options);
+            optionSpinner.setAdapter(arrayAdapter);
+            optionSpinner.setVisibility(View.VISIBLE);
+            super.onPostExecute(aVoid);
         }
     }
 

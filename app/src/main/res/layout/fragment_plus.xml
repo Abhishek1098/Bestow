@@ -54,7 +54,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/PlusFragment_Button_TakePic"
-        app:layout_constraintVertical_bias="0.19" />
+        app:layout_constraintVertical_bias="0.6" />
 
     <Button
         android:id="@+id/PlusFragment_Button_PostButton"
@@ -68,4 +68,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/PlusFragment_EditText_EditDesc" />
+
+    <Spinner
+        android:id="@+id/PlusFragment_Spinner_OptionSpinner"
+        android:layout_width="368dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.72" />
 </android.support.constraint.ConstraintLayout>
