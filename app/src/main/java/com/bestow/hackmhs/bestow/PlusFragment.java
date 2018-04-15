@@ -2,13 +2,16 @@ package com.bestow.hackmhs.bestow;
 
 import android.Manifest;
 import android.app.Fragment;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.content.Context;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -16,6 +19,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,8 +42,11 @@ public class PlusFragment extends Fragment implements LocationListener{
     static final int REQUEST_LOCATION = 1;
     double latitude = 0;
     double longitude = 0;
-
     JSONObject GPSjsonObject;
+
+    ImageView pictureTaken;
+    Button takePic;
+    private static final int CAMERA_REQUEST_CODE = 10;
 
     @Nullable
     @Override
@@ -48,7 +56,29 @@ public class PlusFragment extends Fragment implements LocationListener{
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         getLocation();
 
+        pictureTaken = view.findViewById(R.id.PlusFragment_ImageView_PictureTaken);
+        takePic = view.findViewById(R.id.PlusFragment_Button_TakePic);
+
+        takePic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                captureImg();
+            }
+        });
+
         return view;
+    }
+
+    public void captureImg(){
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, CAMERA_REQUEST_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Bitmap bitmap = (Bitmap)data.getExtras().get("data");
+        pictureTaken.setImageBitmap(bitmap);
     }
 
     private void getLocation() {
@@ -78,6 +108,9 @@ public class PlusFragment extends Fragment implements LocationListener{
         switch (requestCode){
             case REQUEST_LOCATION:
                 getLocation();
+                break;
+            case CAMERA_REQUEST_CODE:
+                captureImg();
                 break;
         }
     }

@@ -29,7 +29,7 @@ public class BrowseFragment extends Fragment {
 
         Bitmap tester = BitmapFactory.decodeResource(getResources(),R.drawable.ic_browse);
         items = new ArrayList<>();
-            items.add(new Item("test","blue t shirt", tester));
+            items.add(new Item("test","blue t shirt", "nyc", tester));
 
         ItemAdapter adapter = new ItemAdapter(getActivity(),R.layout.item_layout,items);
         listView.setAdapter(adapter);

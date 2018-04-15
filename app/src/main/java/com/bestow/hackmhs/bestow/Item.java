@@ -11,12 +11,15 @@ public class Item {
     private String username;
     private String description;
     private Bitmap image;
+    private String town;
 
-    public Item(String user, String desc, Bitmap img){
+    public Item(String user, String desc, String city, Bitmap img){
         username=user;
         description=desc;
+        town = city;
         image=img;
     }
+
 
     public String getUsername() {
         return username;
@@ -26,6 +29,12 @@ public class Item {
     }
     public String getDescription() {
         return description;
+    }
+    public String getTown() {
+        return town;
+    }
+    public void setTown(String town) {
+        this.town = town;
     }
     public void setUsername(String username) {
         this.username = username;
