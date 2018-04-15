@@ -33,6 +33,8 @@ public class BrowseFragment extends Fragment {
 
         ItemAdapter adapter = new ItemAdapter(getActivity(),R.layout.item_layout,items);
         listView.setAdapter(adapter);
+
+        //TODO: REFRESH FROM FIREBASE
         return view;
     }
 }

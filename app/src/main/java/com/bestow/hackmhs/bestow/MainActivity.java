@@ -21,9 +21,9 @@ import com.google.firebase.auth.FirebaseAuth;
 public class MainActivity extends AppCompatActivity {
 
     private FrameLayout fragmentFrame;
-    private PlusFragment plusFragment;
-    private ProfileFragment profileFragment;
-    private BrowseFragment browseFragment;
+    private static PlusFragment plusFragment;
+    private static ProfileFragment profileFragment;
+    private static BrowseFragment browseFragment;
     private FirebaseAuth firebaseAuth;
 
     @Override
@@ -68,5 +68,15 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return false;
+    }
+
+    public static PlusFragment getPlusFragment() {
+        return plusFragment;
+    }
+    public static ProfileFragment getProfileFragment() {
+        return profileFragment;
+    }
+    public static BrowseFragment getBrowseFragment() {
+        return browseFragment;
     }
 }
