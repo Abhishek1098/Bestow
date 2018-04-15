@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.content.Context;
@@ -24,15 +25,20 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -60,6 +66,7 @@ public class PlusFragment extends Fragment implements LocationListener{
     ImageView pictureTaken;
     Button takePic, post;
     private static final int CAMERA_REQUEST_CODE = 10;
+    String stringUrl;
 
     @Nullable
     @Override
@@ -126,6 +133,29 @@ public class PlusFragment extends Fragment implements LocationListener{
         super.onActivityResult(requestCode, resultCode, data);
         bitmap = (Bitmap)data.getExtras().get("data");
         pictureTaken.setImageBitmap(bitmap);
+        Uri uri = getImageUri(getContext(), bitmap);
+        createProfileImageUrl(uri);
+        //After this line the stringURl is an actual value!!!!!!!!!!! SHIVEN HERE
+        //stringURL <--- do shit with that
+    }
+
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+
+    private void createProfileImageUrl(Uri uriProfileImage){
+        StorageReference profileImageRef = FirebaseStorage.getInstance().getReference("profilepics/" + System.currentTimeMillis() + ".jpg");
+
+        if (uriProfileImage != null) {
+            profileImageRef.putFile(uriProfileImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    stringUrl = taskSnapshot.getDownloadUrl().toString();
+                }
+            });
+        }
     }
 
     private void getLocation() {
