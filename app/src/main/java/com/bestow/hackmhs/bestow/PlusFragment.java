@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -43,6 +44,7 @@ public class PlusFragment extends Fragment implements LocationListener{
     double latitude = 0;
     double longitude = 0;
     JSONObject GPSjsonObject;
+    EditText editDescription;
 
     ImageView pictureTaken;
     Button takePic;
@@ -173,6 +175,7 @@ public class PlusFragment extends Fragment implements LocationListener{
 
         }
     }
+
 
 }
 

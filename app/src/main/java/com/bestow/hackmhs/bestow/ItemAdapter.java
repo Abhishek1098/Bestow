@@ -37,11 +37,13 @@ public class ItemAdapter extends ArrayAdapter {
 
         TextView description = layoutView.findViewById(R.id.Item_TextView_Description);
         TextView seller = layoutView.findViewById(R.id.Item_TextView_Seller);
+        TextView town = layoutView.findViewById(R.id.Item_TextView_Town);
         ImageView image = layoutView.findViewById(R.id.Item_ImageView_image);
 
         description.setText(currentItem.getDescription());
         seller.setText(currentItem.getUsername());
         image.setImageBitmap(currentItem.getImage());
+
 
         return layoutView;
     }
