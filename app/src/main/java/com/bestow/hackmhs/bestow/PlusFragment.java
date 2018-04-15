@@ -105,12 +105,14 @@ public class PlusFragment extends Fragment implements LocationListener{
                     FirebaseDatabase firebaseDatabase =  FirebaseDatabase.getInstance();
                     DatabaseReference drItems = firebaseDatabase.getReference("users");
 
+                    DatabaseReference itemNode = firebaseDatabase.getReference("Items");
 
                     String name = firebaseUser.getDisplayName();
                     String description = editDescription.getText().toString();
 
                     Item itemToAdd = new Item(name, description, town, "hope this works");
                     drItems.child(name).child(drItems.push().getKey()).setValue(itemToAdd);
+                    itemNode.child(itemNode.push().getKey()).setValue(itemToAdd);
 
                     Toast.makeText(getActivity(), "Item Added", Toast.LENGTH_SHORT).show();
                 }
