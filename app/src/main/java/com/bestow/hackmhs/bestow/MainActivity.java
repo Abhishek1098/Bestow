@@ -17,6 +17,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -77,15 +79,5 @@ public class MainActivity extends AppCompatActivity {
             finish();
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
         }
-    }
-
-    public static PlusFragment getPlusFragment() {
-        return plusFragment;
-    }
-    public static ProfileFragment getProfileFragment() {
-        return profileFragment;
-    }
-    public static BrowseFragment getBrowseFragment() {
-        return browseFragment;
     }
 }

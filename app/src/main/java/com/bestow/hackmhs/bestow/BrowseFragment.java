@@ -10,12 +10,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 
 public class BrowseFragment extends Fragment {
 
     private ListView listView;
-    public static ArrayList<Item> items;
+    public ArrayList<Item> items;
+
+    FirebaseAuth firebaseAuth;
+    FirebaseUser firebaseUser;
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReference;
 
     @Nullable
     @Override
@@ -36,5 +49,33 @@ public class BrowseFragment extends Fragment {
 
         //TODO: REFRESH FROM FIREBASE
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("items");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                items.clear();
+                for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
+                    String username = (String) messageSnapshot.child("username").getValue();
+                    String description  = (String) messageSnapshot.child("description").getValue();
+                    String city = (String) messageSnapshot.child("city").getValue();
+                    //Bitmap bitmap;
+
+                    items.add(new Item(username, description, city, ""));
+
+                    listView.deferNotifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }

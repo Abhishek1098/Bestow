@@ -44,8 +44,8 @@ public class ItemAdapter extends ArrayAdapter {
 
         description.setText(currentItem.getDescription());
         seller.setText(currentItem.getUsername());
-        image.setImageBitmap(currentItem.getImage());
-        town.setText(currentItem.getTown());
+        image.setImageBitmap(currentItem.getBitmap());
+        town.setText(currentItem.getCity());
 
         return layoutView;
     }

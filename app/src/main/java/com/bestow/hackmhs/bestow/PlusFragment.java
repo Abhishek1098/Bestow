@@ -24,6 +24,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -77,14 +82,30 @@ public class PlusFragment extends Fragment implements LocationListener{
                 if(editDescription.getText().toString().length()==0){
                     Toast.makeText(getActivity(), "Please Enter a Description", Toast.LENGTH_SHORT).show();
                 }else{
-                    BrowseFragment.items.add(new Item("NAME",editDescription.getText().toString(),town,bitmap)); //TODO: FIX NAME AND PULL IT FROM FIREBASE
+
+                    storeItemFirebase();
+
                     Toast.makeText(getActivity(), "Item Added", Toast.LENGTH_SHORT).show();
-                    //TODO: PUSH TO FIREBASE
                 }
             }
         });
 
         return view;
+    }
+
+    public void storeItemFirebase(){
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
+        String name = firebaseUser.getDisplayName();
+        String description = editDescription.getText().toString();
+
+        Item item = new Item( name, description, town, bitmap);
+        Item itemUpload = new Item (item.getUsername(), item.getDescription(), item.getCity(), item.BitMapToString(item.getBitmap()));
+
+        FirebaseDatabase firebaseDatabase =  FirebaseDatabase.getInstance();
+        DatabaseReference drItems = firebaseDatabase.getReference("items");
+        drItems.child(drItems.push().getKey()).setValue(itemUpload);
     }
 
     public void captureImg(){
