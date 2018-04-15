@@ -21,6 +21,11 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,9 +34,11 @@ public class ProfileFragment extends Fragment {
 
     private ImageView imageViewProfilePicture;
     private TextView textViewName;
-    //private ListView listView;
+    private ListView listView;
     private ArrayList<Item> items;
     private FirebaseAuth firebaseAuth;
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReference;
 
     @Nullable
     @Override
@@ -40,7 +47,7 @@ public class ProfileFragment extends Fragment {
 
         imageViewProfilePicture = view.findViewById(R.id.ProfileFragment_ImageView_ProfilePic);
         textViewName = view.findViewById(R.id.ProfileFragment_TextView_Name);
-        //listView = view.findViewById(R.id.ProfileFragment_ListView_ItemList);
+        listView = view.findViewById(R.id.listView);
 
         (view.findViewById(R.id.ProfileFragment_ImageView_edit)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,13 +66,39 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        /*Bitmap tester = BitmapFactory.decodeResource(getResources(),R.drawable.ic_browse);
-        itemArrayList = new ArrayList<>();
-            itemArrayList.add(new Item("test","blue t shirt", "nyc", tester));
-        ItemAdapter adapter  = new ItemAdapter(getActivity(),R.layout.item_layout,itemArrayList);
-        listView.setAdapter(adapter);*/
+        items =new ArrayList<>();
+        ItemAdapter itemAdapter = new ItemAdapter(getActivity(), R.layout.item_layout, items);
+        listView.setAdapter(itemAdapter);
 
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("users");
+
+        /*databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                items.clear();
+                for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
+                    String username = (String) messageSnapshot.child("username").getValue();
+                    String description  = (String) messageSnapshot.child("description").getValue();
+                    String city = (String) messageSnapshot.child("city").getValue();
+
+                    itemArrayList.add(new Item(username, description, city, ""));
+
+                    adapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });*/
     }
 
     public void setView(){
