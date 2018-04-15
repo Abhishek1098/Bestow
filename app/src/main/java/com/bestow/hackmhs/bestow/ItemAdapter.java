@@ -1,6 +1,8 @@
 package com.bestow.hackmhs.bestow;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,10 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
-
-/**
- * Created by Shiven Kumar on 4/14/2018.
- */
 
 public class ItemAdapter extends ArrayAdapter {
 
@@ -40,11 +38,22 @@ public class ItemAdapter extends ArrayAdapter {
         TextView town = layoutView.findViewById(R.id.Item_TextView_Town);
         ImageView image = layoutView.findViewById(R.id.Item_ImageView_image);
 
+        formatTextView(description);
+        formatTextView(seller);
+        formatTextView(town);
+
         description.setText(currentItem.getDescription());
         seller.setText(currentItem.getUsername());
         image.setImageBitmap(currentItem.getImage());
         town.setText(currentItem.getTown());
 
         return layoutView;
+    }
+
+    private void formatTextView(TextView textView){
+        Typeface typeface = Typeface.createFromAsset(con.getAssets(), "schoolbell.ttf");
+        textView.setTextSize(25);
+        textView.setTypeface(typeface);
+        textView.setTextColor(Color.BLUE);
     }
 }

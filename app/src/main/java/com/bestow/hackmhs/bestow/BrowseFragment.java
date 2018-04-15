@@ -12,10 +12,6 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-/**
- * Created by Shiven Kumar on 4/14/2018.
- */
-
 public class BrowseFragment extends Fragment {
 
     private ListView listView;
@@ -25,13 +21,17 @@ public class BrowseFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_browse,null);
+
         listView = view.findViewById(R.id.BrowseFragment_ListView_listView);
 
-        Bitmap tester = BitmapFactory.decodeResource(getResources(),R.drawable.ic_browse);
+        Bitmap tester = BitmapFactory.decodeResource(getResources(),R.drawable.camera);
         items = new ArrayList<>();
-            items.add(new Item("test","blue t shirt", "nyc", tester));
-
+        items.add(new Item("TestName","TestDescription", "New York City", tester));
+        items.add(new Item("TestName","TestDescription", "New York City", tester));
+        items.add(new Item("TestName","TestDescription", "New York City", tester));
+        items.add(new Item("TestName","TestDescription", "New York City", tester));
         ItemAdapter adapter = new ItemAdapter(getActivity(),R.layout.item_layout,items);
+
         listView.setAdapter(adapter);
 
         //TODO: REFRESH FROM FIREBASE
