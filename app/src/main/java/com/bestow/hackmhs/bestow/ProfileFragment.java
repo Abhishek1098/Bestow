@@ -44,7 +44,7 @@ public class ProfileFragment extends Fragment {
             public void onClick(View view) {
                 startActivity(new Intent(getActivity(), CreateProfileActivity.class));
             }
-        });
+        });//
 
         setView();
 
